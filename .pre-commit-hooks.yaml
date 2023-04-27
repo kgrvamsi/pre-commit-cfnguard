@@ -1,8 +1,9 @@
-- id: cfn-guard
-  name: cfn-guard
+- id: cfnguard
+  name: cfnguard
   description: "Black: The uncompromising Python code formatter"
-  entry: cfn-guard
+  entry: cfnguard
   language: python
+  always_run: true
   minimum_pre_commit_version: 2.9.2
   require_serial: true
   types:
