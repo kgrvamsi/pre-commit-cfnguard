@@ -5,6 +5,9 @@
   language: python
   always_run: true
   minimum_pre_commit_version: 2.9.2
-  require_serial: true
+  require_serial: false
   types:
     - file
+  args:
+    - --show-summary
+    - --verbose
