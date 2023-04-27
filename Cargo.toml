@@ -1,5 +1,0 @@
-[package]
-name = "cfn-guard"
-version = "0.0.0"
-authors = ["Vamsi Kotipalli<vamsikgr@amazon.com>"]
-edition = "2023"
