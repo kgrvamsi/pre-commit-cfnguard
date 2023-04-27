@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import argparse
 import math
 import os
@@ -10,16 +8,16 @@ from typing import Sequence
 def cfnguard_scan(
     rules_location: str,
     template_location: str,
-    show_summary: bool = False,
-    verbose: bool = False,
+    # show_summary: bool = False,
+    # verbose: bool = False,
 ) -> int:
     try:
         retv = 0
         cmd_str = ("cfn-guard validate -r {0} --data {1}").format(rules_location, template_location)
-        if show_summary:
-            cmd_str += " --show-summary all"
-        if verbose:
-            cmd_str += " --verbose"
+        # if show_summary:
+        #     cmd_str += " --show-summary all"
+        # if verbose:
+            # cmd_str += " --verbose"
         run_cmd = subprocess.run(
             cmd_str.split(),
             stdout=subprocess.PIPE,
@@ -35,29 +33,54 @@ def cfnguard_scan(
         raise e
 
 
-def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '--rules-location',
-        type=str, default='./cfn-rules/*/*',
+def main() -> int:
+    parser: argparse.ArgumentParser = argparse.ArgumentParser(add_help=False)
+    required: argparse.ArgumentGroup = parser.add_argument_group("required arguments")
+    optional: argparse.ArgumentGroup = parser.add_argument_group("optional arguments")
+    optional.add_argument(
+        "-h",
+        "--help",
+        action="help",
+        default=argparse.SUPPRESS,
+        help="show this help message and exit",
+    )
+    # optional.add_argument(
+    #     "--show-summary",
+    #     action="store_true",
+    # )
+    required.add_argument(
+        "-r",
+        "--rules-location",
+        required=True,
         help='Enforce all files are checked, not just staged files.',
     )
-    parser.add_argument(
-        '--template-location', type=str,
-        default='./cdk.out/*.template.*',
+    required.add_argument(
+        "-t",
+        "--template-location",
+        required=True,
         help='Location of the CloudFormation template',
     )
-    parser.add_argument(
-        '--show-summary', action='store_true',
-        help='Show summary of results',
-    )
-    parser.add_argument(
-        '--verbose', action='store_true',
-        help='Show verbose output',
-    )
-    args = parser.parse_args(argv)
+    # parser.add_argument(
+    #     '--rules-location',
+    #     type=str, default='./cfn-rules/*/*',
+    #     help='Enforce all files are checked, not just staged files.',
+    # )
+    # parser.add_argument(
+    #     '--template-location', type=str,
+    #     default='./cdk.out/*.template.*',
+    #     help='Location of the CloudFormation template',
+    # )
+    # parser.add_argument(
+    #     '--show-summary', action='store_true',
+    #     help='Show summary of results',
+    # )
+    # parser.add_argument(
+    #     '--verbose', action='store_true',
+    #     help='Show verbose output',
+    # )
+    args: argparse.Namespace = parser.parse_args()
 
-    return cfnguard_scan(args.rules_location, args.template_location, args.show_summary, args.verbose)
+    return cfnguard_scan(args.rules_location, args.template_location)
 
 
 if __name__ == '__main__':
